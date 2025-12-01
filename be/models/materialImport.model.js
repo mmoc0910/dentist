@@ -18,8 +18,8 @@ const materialImportSchema = new mongoose.Schema({
   },
   total_price: {
     type: Number,
-    required: true,
-    min: 0
+    min: 0,
+    default: 0
   },
   supplier: {
     type: String,

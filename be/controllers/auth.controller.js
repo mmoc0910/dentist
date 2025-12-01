@@ -14,16 +14,18 @@ const generateToken = (id) => {
 // @access  Public
 exports.login = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    // Frontend gửi userName, phải map sang username
+    const { userName, username, password } = req.body;
+    const loginUsername = userName || username;
 
     // Validate input
-    if (!username || !password) {
+    if (!loginUsername || !password) {
       return res.status(400).json({ message: 'Vui lòng nhập đầy đủ thông tin' });
     }
 
     // Check if user exists
     const user = await User.findOne({ 
-      $or: [{ username }, { email: username }] 
+      $or: [{ username: loginUsername }, { email: loginUsername }] 
     }).populate('role_id');
 
     if (!user) {
@@ -49,9 +51,23 @@ exports.login = async (req, res) => {
     const userResponse = user.toObject();
     delete userResponse.password;
 
+    // Map role name to match frontend expectations
+    let roleName = 'Admin'; // default
+    if (user.role_id && user.role_id.name) {
+      const roleMapping = {
+        'Admin': 'Admin',
+        'Bác sĩ': 'Doctor',
+        'Điều dưỡng trưởng': 'LeaderNurse',
+        'Y tá': 'Nurse',
+        'Lễ tân': 'Receptionist'
+      };
+      roleName = roleMapping[user.role_id.name] || user.role_id.name;
+    }
+
     res.status(200).json({
       message: 'Đăng nhập thành công',
-      token,
+      jwt: token, // Frontend expect 'jwt' not 'token'
+      role: roleName, // Frontend expect 'role'
       user: userResponse
     });
   } catch (error) {

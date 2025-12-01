@@ -517,7 +517,10 @@ async function createLabos() {
 // Create patient records
 async function createPatientRecords(patients, users, services) {
   const records = [];
-  const doctors = users.filter(u => u.role_id && u.role_id.name === 'Bác sĩ');
+  
+  // Populate role_id for filtering
+  const populatedUsers = await User.find({ _id: { $in: users.map(u => u._id) } }).populate('role_id');
+  const doctors = populatedUsers.filter(u => u.role_id && u.role_id.name === 'Bác sĩ');
   
   // Create records for 30 random patients
   const selectedPatients = patients.slice(0, 30);
@@ -622,7 +625,10 @@ async function createMaterialExports(materials, patients, records, users) {
 // Create specimens
 async function createSpecimens(patients, labos, records, users) {
   const specimens = [];
-  const doctors = users.filter(u => u.role_id && u.role_id.name === 'Bác sĩ');
+  
+  // Populate role_id for filtering
+  const populatedUsers = await User.find({ _id: { $in: users.map(u => u._id) } }).populate('role_id');
+  const doctors = populatedUsers.filter(u => u.role_id && u.role_id.name === 'Bác sĩ');
   
   const specimenTypes = [
     { name: 'Răng sứ', type: 'Crown', price: 3000000 },
@@ -762,8 +768,11 @@ async function createBillsAndReceipts(records, patients, users) {
 // Create waiting room entries
 async function createWaitingRoom(patients, users) {
   const waitingList = [];
-  const receptionists = users.filter(u => u.role_id && u.role_id.name === 'Lễ tân');
-  const doctors = users.filter(u => u.role_id && u.role_id.name === 'Bác sĩ');
+  
+  // Populate role_id for filtering
+  const populatedUsers = await User.find({ _id: { $in: users.map(u => u._id) } }).populate('role_id');
+  const receptionists = populatedUsers.filter(u => u.role_id && u.role_id.name === 'Lễ tân');
+  const doctors = populatedUsers.filter(u => u.role_id && u.role_id.name === 'Bác sĩ');
   
   // Create 10 waiting entries (mix of statuses)
   for (let i = 0; i < 10; i++) {
@@ -798,7 +807,7 @@ async function createWaitingRoom(patients, users) {
 // Create timekeeping records
 async function createTimekeeping(users) {
   const timekeeping = [];
-  const staffUsers = users.filter(u => u.role_id); // All users with roles
+  const staffUsers = users; // All users have roles
   
   // Create timekeeping for last 30 days
   for (let day = 0; day < 30; day++) {
@@ -840,8 +849,11 @@ async function createTimekeeping(users) {
 // Create schedules
 async function createSchedules(users, patients) {
   const schedules = [];
-  const doctors = users.filter(u => u.role_id && u.role_id.name === 'Bác sĩ');
-  const allStaff = users.filter(u => u.role_id);
+  
+  // Populate role_id for filtering
+  const populatedUsers = await User.find({ _id: { $in: users.map(u => u._id) } }).populate('role_id');
+  const doctors = populatedUsers.filter(u => u.role_id && u.role_id.name === 'Bác sĩ');
+  const allStaff = populatedUsers;
   
   // Create schedules for next 30 days
   for (let day = 0; day < 30; day++) {

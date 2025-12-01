@@ -44,8 +44,8 @@ const specimenSchema = new mongoose.Schema({
   },
   total_price: {
     type: Number,
-    required: true,
-    min: 0
+    min: 0,
+    default: 0
   },
   status: {
     type: String,

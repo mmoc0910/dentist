@@ -1,3 +1,4 @@
+const { parsePagination } = require('../utils/pagination');
 const Material = require('../models/material.model');
 
 // @desc    Get list of materials with pagination
@@ -5,7 +6,7 @@ const Material = require('../models/material.model');
 // @access  Private
 exports.getListMaterials = async (req, res) => {
   try {
-    const { page = 1, size = 10, search = '' } = req.query;
+    const pagination = parsePagination(req.query);
     
     const query = search ? {
       $or: [
@@ -15,16 +16,16 @@ exports.getListMaterials = async (req, res) => {
     } : {};
 
     const materials = await Material.find(query)
-      .limit(size * 1)
-      .skip((page - 1) * size)
+      .limit(pagination.size)
+      .skip(pagination.skip)
       .sort({ createdAt: -1 });
 
     const count = await Material.countDocuments(query);
 
     res.status(200).json({
       materials,
-      totalPages: Math.ceil(count / size),
-      currentPage: page,
+      totalPages: Math.ceil(count / pagination.size),
+      currentPage: pagination.page,
       total: count
     });
   } catch (error) {

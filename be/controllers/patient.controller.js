@@ -8,6 +8,10 @@ exports.getListPatients = async (req, res) => {
   try {
     const { page = 1, size = 10, search = '' } = req.query;
     
+    // Parse to integer and ensure positive values
+    const pageNum = Math.max(1, parseInt(page) || 1);
+    const sizeNum = Math.max(1, parseInt(size) || 10);
+    
     const query = search ? {
       $or: [
         { fullname: { $regex: search, $options: 'i' } },
@@ -17,16 +21,16 @@ exports.getListPatients = async (req, res) => {
     } : {};
 
     const patients = await Patient.find(query)
-      .limit(size * 1)
-      .skip((page - 1) * size)
+      .limit(sizeNum)
+      .skip((pageNum - 1) * sizeNum)
       .sort({ createdAt: -1 });
 
     const count = await Patient.countDocuments(query);
 
     res.status(200).json({
       patients,
-      totalPages: Math.ceil(count / size),
-      currentPage: page,
+      totalPages: Math.ceil(count / sizeNum),
+      currentPage: pageNum,
       total: count
     });
   } catch (error) {

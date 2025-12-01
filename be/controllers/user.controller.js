@@ -1,3 +1,4 @@
+const { parsePagination } = require('../utils/pagination');
 const User = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 
@@ -6,7 +7,7 @@ const bcrypt = require('bcryptjs');
 // @access  Private
 exports.getListUsers = async (req, res) => {
   try {
-    const { page = 1, size = 10, search = '' } = req.query;
+    const pagination = parsePagination(req.query);
     
     const query = search ? {
       $or: [
@@ -19,16 +20,16 @@ exports.getListUsers = async (req, res) => {
     const users = await User.find(query)
       .populate('role_id')
       .select('-password')
-      .limit(size * 1)
-      .skip((page - 1) * size)
+      .limit(pagination.size)
+      .skip(pagination.skip)
       .sort({ createdAt: -1 });
 
     const count = await User.countDocuments(query);
 
     res.status(200).json({
       users,
-      totalPages: Math.ceil(count / size),
-      currentPage: page,
+      totalPages: Math.ceil(count / pagination.size),
+      currentPage: pagination.page,
       total: count
     });
   } catch (error) {

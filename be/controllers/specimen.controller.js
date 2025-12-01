@@ -1,3 +1,4 @@
+const { parsePagination } = require('../utils/pagination');
 const Specimen = require('../models/specimen.model');
 
 // @desc    Get list of specimens
@@ -5,7 +6,7 @@ const Specimen = require('../models/specimen.model');
 // @access  Private
 exports.getListSpecimens = async (req, res) => {
   try {
-    const { page = 1, size = 10, search = '' } = req.query;
+    const pagination = parsePagination(req.query);
     
     const query = search ? {
       $or: [
@@ -18,16 +19,16 @@ exports.getListSpecimens = async (req, res) => {
       .populate('patient_id')
       .populate('labo_id')
       .populate('created_by', 'fullname email')
-      .limit(size * 1)
-      .skip((page - 1) * size)
+      .limit(pagination.size)
+      .skip(pagination.skip)
       .sort({ createdAt: -1 });
 
     const count = await Specimen.countDocuments(query);
 
     res.status(200).json({
       specimens,
-      totalPages: Math.ceil(count / size),
-      currentPage: page,
+      totalPages: Math.ceil(count / pagination.size),
+      currentPage: pagination.page,
       total: count
     });
   } catch (error) {

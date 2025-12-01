@@ -1,3 +1,4 @@
+const { parsePagination } = require('../utils/pagination');
 const MaterialImport = require('../models/materialImport.model');
 const Material = require('../models/material.model');
 const moment = require('moment');
@@ -7,21 +8,21 @@ const moment = require('moment');
 // @access  Private
 exports.getListImport = async (req, res) => {
   try {
-    const { page = 1, size = 10, search = '' } = req.query;
+    const pagination = parsePagination(req.query);
 
     const imports = await MaterialImport.find()
       .populate('material_id')
       .populate('created_by', 'fullname email')
-      .limit(size * 1)
-      .skip((page - 1) * size)
+      .limit(pagination.size)
+      .skip(pagination.skip)
       .sort({ createdAt: -1 });
 
     const count = await MaterialImport.countDocuments();
 
     res.status(200).json({
       imports,
-      totalPages: Math.ceil(count / size),
-      currentPage: page,
+      totalPages: Math.ceil(count / pagination.size),
+      currentPage: pagination.page,
       total: count
     });
   } catch (error) {

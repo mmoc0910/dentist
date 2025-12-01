@@ -1,3 +1,4 @@
+const { parsePagination } = require('../utils/pagination');
 const Timekeeping = require('../models/timekeeping.model');
 const moment = require('moment');
 
@@ -6,7 +7,7 @@ const moment = require('moment');
 // @access  Private
 exports.getListTimekeeping = async (req, res) => {
   try {
-    const { page = 1, size = 10, userId, startDate, endDate } = req.query;
+    const pagination = parsePagination(req.query);
 
     let query = {};
 
@@ -23,16 +24,16 @@ exports.getListTimekeeping = async (req, res) => {
 
     const timekeeping = await Timekeeping.find(query)
       .populate('user_id', 'fullname email role_id')
-      .limit(size * 1)
-      .skip((page - 1) * size)
+      .limit(pagination.size)
+      .skip(pagination.skip)
       .sort({ date: -1, createdAt: -1 });
 
     const count = await Timekeeping.countDocuments(query);
 
     res.status(200).json({
       timekeeping,
-      totalPages: Math.ceil(count / size),
-      currentPage: page,
+      totalPages: Math.ceil(count / pagination.size),
+      currentPage: pagination.page,
       total: count
     });
   } catch (error) {

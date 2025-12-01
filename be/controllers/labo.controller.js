@@ -1,3 +1,4 @@
+const { parsePagination } = require('../utils/pagination');
 const Labo = require('../models/labo.model');
 const Specimen = require('../models/specimen.model');
 
@@ -6,7 +7,7 @@ const Specimen = require('../models/specimen.model');
 // @access  Private
 exports.getListLabos = async (req, res) => {
   try {
-    const { page = 1, size = 10, search = '' } = req.query;
+    const pagination = parsePagination(req.query);
     
     const query = search ? {
       $or: [
@@ -17,16 +18,16 @@ exports.getListLabos = async (req, res) => {
     } : {};
 
     const labos = await Labo.find(query)
-      .limit(size * 1)
-      .skip((page - 1) * size)
+      .limit(pagination.size)
+      .skip(pagination.skip)
       .sort({ createdAt: -1 });
 
     const count = await Labo.countDocuments(query);
 
     res.status(200).json({
       labos,
-      totalPages: Math.ceil(count / size),
-      currentPage: page,
+      totalPages: Math.ceil(count / pagination.size),
+      currentPage: pagination.page,
       total: count
     });
   } catch (error) {

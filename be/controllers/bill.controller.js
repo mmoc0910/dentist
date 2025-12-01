@@ -1,3 +1,4 @@
+const { parsePagination } = require('../utils/pagination');
 const Bill = require('../models/bill.model');
 
 // @desc    Get list of bills
@@ -5,7 +6,7 @@ const Bill = require('../models/bill.model');
 // @access  Private
 exports.getListBills = async (req, res) => {
   try {
-    const { page = 1, size = 10, search = '' } = req.query;
+    const pagination = parsePagination(req.query);
 
     let query = {};
     if (search) {
@@ -17,16 +18,16 @@ exports.getListBills = async (req, res) => {
       .populate('patient_id')
       .populate('record_id')
       .populate('created_by', 'fullname email')
-      .limit(size * 1)
-      .skip((page - 1) * size)
+      .limit(pagination.size)
+      .skip(pagination.skip)
       .sort({ createdAt: -1 });
 
     const count = await Bill.countDocuments(query);
 
     res.status(200).json({
       bills,
-      totalPages: Math.ceil(count / size),
-      currentPage: page,
+      totalPages: Math.ceil(count / pagination.size),
+      currentPage: pagination.page,
       total: count
     });
   } catch (error) {
