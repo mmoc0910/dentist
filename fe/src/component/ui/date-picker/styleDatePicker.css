@@ -1,0 +1,20 @@
+.ant-picker-panel-container {
+  padding: 10px;
+  border-radius: 10px;
+  position: relative;
+}
+.ant-picker {
+  padding: 10px;
+  border-radius: 4px;
+  border-color: #bfbfbfde;
+  width: 100%;
+}
+.ant-picker-dropdown {
+  z-index: 10000 !important;
+}
+.ant-picker-cell-inner{
+    border-radius: 50% !important;
+}
+.ant-picker-cell-inner::before{
+    border-radius: 50% !important;
+}

@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.App {
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+}
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: rgb(0, 0, 0);
+}
+
+.App-link {
+  color: #61dafb;
+}
+.denist-color {
+  color: #0288d1;
+}
+.denist-color-bg {
+  background-color: #0288d1;
+}
+.ant-modal-title {
+  color: #fff !important;
+  text-align: center;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 20px !important;
+}
+.ant-modal-header{
+  background-color: #000000ba !important;
+}
+.ant-modal-content {
+  border-radius: 10px !important;
+  overflow: hidden;
+}
+.ant-modal-close-x{
+  color: #fff !important;
+}
+.ant-btn {
+  border-radius: 10px !important;
+  overflow: hidden;
+}
+.ant-tabs-tab{
+  border-radius: 10px 10px 0 0 !important;
+}
+.ant-picker{
+  height: 56px !important;
+}
+::-webkit-scrollbar {
+  width: 3px;
+}
+.ant-popover-inner-content{
+  /* padding: 0 !important; */
+  /* padding-top: 0 !important; */
+}
+/* Track */
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(168, 168, 168); 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #9c9c9c; 
+}
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
