@@ -29,7 +29,7 @@ const ModalAddPatient = ({ modalAddOpen, setModalAddOpen, isSubmitForm }) => {
     patientName: yup
       .string("Nhập họ tên")
       .matches(
-        regexName,
+        // regexName,
         "Họ và tên không được nhập số hoặc kí tự đặc biệt, nhập từ 8 đến 32 ký tự."
       )
       .required("Họ tên là bắt buộc."),
