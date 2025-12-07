@@ -1,4 +1,46 @@
 const WaitingRoom = require('../models/waitingRoom.model');
+const { parsePagination } = require('../utils/pagination');
+
+// @desc    Get waiting room info with pagination
+// @route   GET /api/waiting_room/info
+// @access  Private
+exports.getWaitingRoomInfo = async (req, res) => {
+  try {
+    const { page, size, skip } = parsePagination(req.query);
+    const { status } = req.query;
+
+    // Build filter
+    const filter = {};
+    if (status) {
+      filter.status = status;
+    }
+
+    // Get total count
+    const totalElements = await WaitingRoom.countDocuments(filter);
+
+    // Get paginated data
+    const content = await WaitingRoom.find(filter)
+      .populate('patient_id')
+      .populate('doctor_id', 'fullname email')
+      .populate('created_by', 'fullname email')
+      .sort({ createdAt: 1 })
+      .skip(skip)
+      .limit(size);
+
+    const totalPages = Math.ceil(totalElements / size);
+
+    res.status(200).json({
+      content,
+      pageNumber: page - 1, // Convert to 0-based index
+      totalPages,
+      totalElements,
+      message: 'Success'
+    });
+  } catch (error) {
+    console.error('Get waiting room info error:', error);
+    res.status(500).json({ message: 'Lỗi server', error: error.message });
+  }
+};
 
 // @desc    Get list of waiting patients
 // @route   GET /api/waiting_room/get-list-waiting

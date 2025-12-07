@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { listWaitingAPI, deleteWaitingAPI,callWaitingAPI } from "../../config/baseAPI"
+import { listWaitingAPI, listWaitingInfoAPI, deleteWaitingAPI, callWaitingAPI } from "../../config/baseAPI"
 import axiosInstance from "../../config/customAxios"
 import { toast } from "react-toastify"
 
@@ -58,12 +58,29 @@ const listWaitingSlice = createSlice({
 
 export const fetchAllWaiting = createAsyncThunk('listWaiting/fetchAllWaiting', async (paramsSearch) => {
     try {
-        const res = await axiosInstance.get(listWaitingAPI, {
+        // Use new paginated endpoint
+        const res = await axiosInstance.get(listWaitingInfoAPI, {
             params: paramsSearch,
         })
         return res.data
     } catch (error) {
         console.log(error)
+        // Fallback to old endpoint if new one fails
+        try {
+            const fallbackRes = await axiosInstance.get(listWaitingAPI, {
+                params: paramsSearch,
+            })
+            // Transform old format to new format
+            return {
+                content: fallbackRes.data,
+                pageNumber: 0,
+                totalPages: 1,
+                totalElements: fallbackRes.data.length,
+                message: 'Success'
+            }
+        } catch (fallbackError) {
+            console.log(fallbackError)
+        }
     }
 })
 

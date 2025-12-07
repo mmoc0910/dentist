@@ -46,6 +46,7 @@ app.use('/api/bills', billRoutes);
 app.use('/api/receipts', receiptRoutes);
 app.use('/api/income', incomeRoutes);
 app.use('/api/waiting_room', waitingRoomRoutes);
+app.use('/waiting-room', waitingRoomRoutes); // Additional route for frontend compatibility
 app.use('/api/timekeeping', timekeepingRoutes);
 app.use('/api/schedule', scheduleRoutes);
 app.use('/api/notifies', notifyRoutes);

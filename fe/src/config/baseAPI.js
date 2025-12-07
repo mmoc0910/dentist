@@ -105,6 +105,7 @@ export const listTreatingServiceAPI = `${baseUrl}/api/categories/get_treating_se
 export const listAllServiceAPI = `${baseUrl}/api/categories/get_all_service`
 
 export const listWaitingAPI = `${baseUrl}/api/waiting_room/get-list-waiting`
+export const listWaitingInfoAPI = `${baseUrl}/waiting-room/info` // New paginated endpoint
 export const listConfirmWaitingAPI = `${baseUrl}/api/waiting_room/get_list_confirm`
 export const deleteWaitingAPI = `${baseUrl}/api/waiting_room/`
 export const callWaitingAPI = `${baseUrl}/api/waiting_room/call-patient/`
