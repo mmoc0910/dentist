@@ -1,11 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import {
-  listWaitingAPI,
-  deleteWaitingAPI,
-  callWaitingAPI,
-} from "../../config/baseAPI";
-import axiosInstance from "../../config/customAxios";
-import { toast } from "react-toastify";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { listWaitingAPI, deleteWaitingAPI,callWaitingAPI } from "../../config/baseAPI"
+import axiosInstance from "../../config/customAxios"
+import { toast } from "react-toastify"
 
 const initState = {
   listWaiting: [],
@@ -65,13 +61,14 @@ export const fetchAllWaiting = createAsyncThunk(
   "listWaiting/fetchAllWaiting",
   async (paramsSearch) => {
     try {
-      const res = await axiosInstance.get(listWaitingAPI, {
+        // Use new paginated endpoint
+      const res = await axiosInstance.get(listWaitingInfoAPI, {
         params: paramsSearch,
       });
       console.log("data api response list waiting ~ ", res.data);
       return res.data;
     } catch (error) {
-      console.log(error);
+        console.log(error)
     }
   }
 );

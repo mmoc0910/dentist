@@ -3,6 +3,9 @@ const router = express.Router();
 const waitingRoomController = require('../controllers/waitingRoom.controller');
 const { authMiddleware } = require('../middleware/auth.middleware');
 
+// @route   GET /api/waiting_room/info
+router.get('/info', waitingRoomController.getWaitingRoomInfo);
+
 // All routes require authentication
 router.use(authMiddleware);
 
