@@ -44,6 +44,7 @@ import SockJsClient from "react-stomp";
 const PatientManagementContent = () => {
   const dispatch = useDispatch();
   const listWaiting = useSelector((state) => state.listWaiting.listWaiting);
+  console.log('list waiting ~ ', listWaiting)
   const listPatient = useSelector((state) => state.listPatient.listPatient);
   const isAddPatient = useSelector((state) => state.listPatient.isAddPatient);
   const pageSize = useSelector((state) => state.listPatient.pageSize);
@@ -149,8 +150,8 @@ const PatientManagementContent = () => {
   };
 
   const mapListWaiting = useMemo(() => {
-    if (listWaiting.length) {
-      return listWaiting.map((item) => item.patientId);
+    if (listWaiting?.length) {
+      return listWaiting?.map((item) => item.patientId);
     }
     return [];
   }, [listWaiting]);
@@ -346,7 +347,7 @@ const PatientManagementContent = () => {
         </TableHead>
         {totalPages === 0 ? null : (
           <TableBody>
-            {listPatient.map((item) => (
+            {listPatient?.map((item) => (
               <StyledTableRowClick
                 className="hover cursor-pointer"
                 key={item.patientId}
